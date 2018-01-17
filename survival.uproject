@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{86708648-4661-1CE5-05B3-7AAD9B7F05E4}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "survival",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"AIModule"
+			]
+		}
+	]
+}
