@@ -16,5 +16,5 @@ class SURVIVAL_API Abears : public AMobPawn
 	
 public:
 	Abears();
-	
+
 };

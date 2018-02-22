@@ -32,14 +32,17 @@ public:
 
 	//logistics
 	FVector pos;
+	FVector origPos;
+	FVector pursuitLocation;
 	FVector path;
-	
+	UWorld *myWorld;
 
 	//functions 
 	void lookForAgent(FVector loc);
 	float magnitude(FVector s);
 	FVector normalize(FVector n, float m);
 	FVector getActor();
+	bool leash();
 	bool InMobRange();
 
 };

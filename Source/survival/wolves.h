@@ -3,16 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIController.h"
-#include "wolfController.generated.h"
+#include "MobPawn.h"
+#include "wolves.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SURVIVAL_API AwolfController : public AAIController
+class SURVIVAL_API Awolves : public AMobPawn
 {
 	GENERATED_BODY()
+	
+	
 	
 	
 };

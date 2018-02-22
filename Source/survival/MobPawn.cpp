@@ -7,6 +7,8 @@
 #include "UObject/UObjectIterator.h"
 #include "survivalCharacter.h"
 #include "GameFramework/PlayerController.h"
+#include "UObject/Object.h"
+
 
 // Sets default values
 AMobPawn::AMobPawn()
@@ -14,6 +16,9 @@ AMobPawn::AMobPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	pos = GetActorLocation();
+	origPos = pos;
+	myWorld = this->GetWorld();
+	range = 0;
 }
 
 // Called when the game starts or when spawned
@@ -27,8 +32,16 @@ void AMobPawn::BeginPlay()
 void AMobPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector pursuitLocation = getActor();
-	lookForAgent(pursuitLocation);
+	pursuitLocation = getActor();
+	if (leash() != true) {
+		if (InMobRange()) {
+			lookForAgent(pursuitLocation);
+		}
+	}
+	else {
+		lookForAgent(origPos);
+	}
+	
 }
 
 // Called to bind functionality to input
@@ -60,6 +73,10 @@ void AMobPawn::lookForAgent(FVector loc)
 	pos.Y += n.Y;
 	pos.Z += n.Z;
 	SetActorLocation(pos);
+
+
+	//double checking for out of bounds
+
 }
 
 //magnitude is the distance to end point
@@ -94,9 +111,36 @@ FVector AMobPawn::getActor() {
 }
 
 bool AMobPawn::InMobRange() {
-	UWorld *myWorld = this->GetWorld();
-	return true;
-	//myWorld->GetDefaultSubobjects<AsurvivalCharacter>();
+	FVector enemy = getActor();
+	FVector me = origPos;
+	FVector loc;
+	float po;
+	loc.X = enemy.X - me.X;
+	loc.Y = enemy.Y - me.Y;
+	loc.Z = enemy.Z - me.Z;
+	po = magnitude(loc);
+	if (po < range) {
+		return true;
+	}
+	else {
+		return false;
+	}
+	
+}
+
+bool AMobPawn::leash() {
+	FVector loc;
+	float po;
+	loc.X = pos.X - origPos.X;
+	loc.Y = pos.Y - origPos.Y;
+	loc.Z = pos.Z - origPos.Y;
+	po = magnitude(loc);
+	if (po > 100) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 

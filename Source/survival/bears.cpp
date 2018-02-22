@@ -4,7 +4,7 @@
 
 Abears::Abears() {
 	hp = 8.0;
-	range = 100;
+	range = 1500;
 	attackPower = 2.0;
 } 
 
