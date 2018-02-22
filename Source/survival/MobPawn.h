@@ -44,5 +44,5 @@ public:
 	FVector getActor();
 	bool leash();
 	bool InMobRange();
-
+	void patrol();
 };

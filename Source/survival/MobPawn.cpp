@@ -135,7 +135,7 @@ bool AMobPawn::leash() {
 	loc.Y = pos.Y - origPos.Y;
 	loc.Z = pos.Z - origPos.Y;
 	po = magnitude(loc);
-	if (po > 100) {
+	if (po > range) {
 		return true;
 	}
 	else {
@@ -143,4 +143,6 @@ bool AMobPawn::leash() {
 	}
 }
 
+void AMobPawn::patrol() {
 
+}
