@@ -2,6 +2,10 @@
 
 #include "wolves.h"
 
-
+Awolves::Awolves() {
+	hp = 6.0;
+	range = 2000;
+	attackPower = 1.2;
+}
 
 

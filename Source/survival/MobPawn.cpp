@@ -8,6 +8,9 @@
 #include "survivalCharacter.h"
 #include "GameFramework/PlayerController.h"
 #include "UObject/Object.h"
+#include "random"
+#include "time.h"
+
 
 
 // Sets default values
@@ -18,14 +21,13 @@ AMobPawn::AMobPawn()
 	pos = GetActorLocation();
 	origPos = pos;
 	myWorld = this->GetWorld();
-	range = 0;
+	range = this->range;
 }
 
 // Called when the game starts or when spawned
 void AMobPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -33,14 +35,7 @@ void AMobPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	pursuitLocation = getActor();
-	if (leash() != true) {
-		if (InMobRange()) {
-			lookForAgent(pursuitLocation);
-		}
-	}
-	else {
-		lookForAgent(origPos);
-	}
+	lookForAgent(pursuitLocation);
 	
 }
 
@@ -74,15 +69,12 @@ void AMobPawn::lookForAgent(FVector loc)
 	pos.Z += n.Z;
 	SetActorLocation(pos);
 
-
-	//double checking for out of bounds
-
 }
 
 //magnitude is the distance to end point
 float AMobPawn::magnitude(FVector s)
 {
-	float m;
+	int m;
 	m = sqrt((s.X * s.X) + (s.Y * s.Y) + (s.Z * s.Z));
 	return m;
 }
@@ -105,8 +97,8 @@ FVector AMobPawn::getActor() {
 		targetLocation = Component->GetActorLocation();
 		//PlayerInputComponent->ClientMessage(Itr->GetName());
 	}
-	UE_LOG(LogClass, Log, TEXT("target location x = %d, y = %d, z = %d"), targetLocation.X, targetLocation.Y, targetLocation.Z);
-	UE_LOG(LogClass, Log, TEXT("bear location x = %d, y = %d, z = %d"), MyLocation.X, MyLocation.Y, MyLocation.Z);
+	//UE_LOG(LogClass, Log, TEXT("target location x = %d, y = %d, z = %d"), targetLocation.X, targetLocation.Y, targetLocation.Z);
+	//UE_LOG(LogClass, Log, TEXT("bear location x = %d, y = %d, z = %d"), MyLocation.X, MyLocation.Y, MyLocation.Z);
 	return targetLocation;
 }
 
@@ -119,7 +111,7 @@ bool AMobPawn::InMobRange() {
 	loc.Y = enemy.Y - me.Y;
 	loc.Z = enemy.Z - me.Z;
 	po = magnitude(loc);
-	if (po < range) {
+	if (po > range) {
 		return true;
 	}
 	else {
@@ -135,14 +127,35 @@ bool AMobPawn::leash() {
 	loc.Y = pos.Y - origPos.Y;
 	loc.Z = pos.Z - origPos.Y;
 	po = magnitude(loc);
-	if (po > range) {
+	if (po > this->range) {
+		UE_LOG(LogClass, Log, TEXT("leashing"));
 		return true;
 	}
 	else {
+		UE_LOG(LogClass, Log, TEXT("not leashing"));
 		return false;
 	}
 }
 
 void AMobPawn::patrol() {
+	FVector pawnLocation;
+	FVector randomLocation;
+	float r;
+	srand(time(NULL));
+	pawnLocation = GetActorLocation();
+	randomLocation.X = pawnLocation.X - origPos.X;
+	randomLocation.Y = pawnLocation.Y - origPos.Y;
+	randomLocation.Z = pawnLocation.Z - origPos.Z;
 
+	r = magnitude(randomLocation);
+	if (r > range) {
+		pawnLocation.X -= rand() % 20;
+		pawnLocation.Y -= rand() % 20;
+	}
+	else {
+		pawnLocation.X += rand() % 20;
+		pawnLocation.Y += rand() % 20;
+	}
+	SetActorLocation(pawnLocation);
+	return;
 }

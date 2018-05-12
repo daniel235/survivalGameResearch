@@ -14,7 +14,8 @@ class SURVIVAL_API Awolves : public AMobPawn
 {
 	GENERATED_BODY()
 	
-	
+public:
+	Awolves();
 	
 	
 };
